@@ -1,0 +1,21 @@
+<h1>fyra i rad</h1>
+
+<form id="params">
+    Tabell 
+    <input type="text" value="2" maxlength="2" ng-model="form.lower"/>
+    till     
+    <input type="text" value="10" maxlength="2" ng-model="form.upper"/>
+
+    <input type="button" id="go" value="starta" ng-click="initGame()"/>
+</form>
+
+<table class="board">
+	<tr ng-repeat="row in board">
+		<td ng-repeat="cell in row" ng-click="clickCell(cell)"><span ng-class="cell.player" ng-bind-html="getAnswerStr(cell)"></span></td>
+	</tr>
+</table>
+
+<div class="player">Spelare <span ng-bind-html="whatPlayer"></span></div>
+<div class="question"><span ng-bind-html="question.firstNumber"></span> * <span ng-bind-html="question.secondNumber"></span></div>
+<div class="winner" ng-class="gameWon">Spelare <span class="player1" ng-class="winner.player1">ett</span><span class="player2" ng-class="winner.player2">två</span> har vunnit!!!</div>
+
