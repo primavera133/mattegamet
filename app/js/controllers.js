@@ -9,13 +9,28 @@ function MatteCtrl($scope) {
 	$scope.board = [];
 	$scope.boardSize = 64;
 	$scope.form = {
-		lower: 2,
-		upper: 10
+		tables : {
+			"1": true,
+			"2": true,
+			"3": true,
+			"4": true,
+			"5": true,
+			"6": true,
+			"7": true,
+			"8": true,
+			"9": true,
+			"10": true
+		}
 	};
 	$scope.question = {};
-	$scope.doneQuestions = 0;
+	$scope.pickedQuestions = 0;
+	$scope.game = {
+		beforeStartedClass: "",
+		startedClass : "hidden",
+	}
 
 	$scope.whatPlayer = "1";
+	$scope.whatPlayerClass = "one";
 
 	$scope.winner = {
 		player1: null,
@@ -52,14 +67,21 @@ function MatteCtrl($scope) {
 
 	}
 
+
 	//generate Question
 	$scope.generateQuestion = function(index) {
-  		var lowerNumber = $scope.form.lower;
-		var higherNumber = $scope.form.upper;
-		var diff = higherNumber - lowerNumber;
 
-		var firstNumber = Math.round( Math.random() * 9) + 1; // 1 -10
-		var secondNumber = Math.round(Math.random() * diff) + lowerNumber;
+		var table,
+			tableSelected = false,
+			firstNumber, secondNumber;
+
+		while(tableSelected === false) {
+			table = Math.round( Math.random() * 9) + 1
+			tableSelected = $scope.form.tables[table];
+		}
+		 
+		firstNumber = Math.round( Math.random() * 9) + 1; // 1 -10
+		secondNumber = table;
 
 		return {
 			firstNumber: firstNumber,
@@ -195,8 +217,10 @@ function MatteCtrl($scope) {
 	$scope.nextPlayer = function () {
 		if ($scope.whatPlayer === "1") {
 			$scope.whatPlayer = "2";
+			$scope.whatPlayerClass = "two";
 		} else {
 			$scope.whatPlayer = "1";
+			$scope.whatPlayerClass = "one";
 		}
 	}
 
@@ -213,12 +237,14 @@ function MatteCtrl($scope) {
 		var question, cell;
 		var haveQuestion = false;
 
-		if($scope.doneQuestions >= $scope.boardSize) {
+		if($scope.pickedQuestions >= $scope.boardSize) {
 			return;
 		}
 		while (!haveQuestion) {
 			cell = $scope.pickRandomCell();
-			if(cell) {
+			if(!cell.picked) {
+				cell.picked = true;
+				$scope.pickedQuestions++;
 				haveQuestion = true;
 			}
 		}
@@ -236,14 +262,23 @@ function MatteCtrl($scope) {
 		var cellIdx =  Math.round(Math.random() * cells);
 		var cell = row[cellIdx];
 
-		if (cell.done) {
-			return false;
-		} else {
-			cell.done = true;
-			$scope.doneQuestions++;
-			return cell;
-		}
+		return cell;
 
+	}
+
+	// Set cell to player
+	$scope.setCorrectCell = function(cell) {
+		cell.player = "player" + $scope.whatPlayer;
+
+		if ($scope.checkWin()) {
+			$scope.displayWinner();
+		} else {
+			$scope.nextPlayer();
+			$scope.displayQuestion($scope.getQuestion());
+			if($scope.game.type === 2 && $scope.whatPlayer === "2") {
+				$scope.makeMove(2);
+			}
+		}
 	}
 
 	//receive cell click event
@@ -251,16 +286,25 @@ function MatteCtrl($scope) {
 		var isCorrect = $scope.checkAnswer(cell);
 
 		if (isCorrect) {
-			cell.player = "player" + $scope.whatPlayer;
-
-			if ($scope.checkWin()) {
-				$scope.displayWinner();
-			} else {
-				$scope.nextPlayer();
-				$scope.displayQuestion($scope.getQuestion());
-			}
-
+			$scope.setCorrectCell(cell);
 		}
+	}
+
+	//make computer generated move
+	$scope.makeMove = function(player) {
+		var correctAnswer = false;
+		var cell;
+
+  		while (!correctAnswer) {
+			cell = $scope.pickRandomCell();
+
+			if($scope.checkAnswer(cell) && cell.player === null) {
+				correctAnswer = true;
+			}
+		}
+
+		$scope.setCorrectCell(cell);
+		return cell;
 	}
 
 	//check if someone won the game
@@ -325,11 +369,36 @@ function MatteCtrl($scope) {
 
 
 	//Init a new game
-	$scope.initGame = function() {
+	$scope.initGame = function(gameType) {
 		$scope.gameWon = false;
-		$scope.generateBoard();	  
-		$scope.displayQuestion($scope.getQuestion());
+		$scope.generateBoard();	
 		$scope.generateWinnerCheckArray();
+
+		$scope.game.type = gameType;
+
+		$scope.game.beforeStartedClass = "hidden";
+		$scope.game.startedClass = "";
+
+		$scope.displayQuestion($scope.getQuestion());
+	}
+
+	//Reset a game
+	$scope.resetGame = function() {
+		var doReset = false;
+
+		if($scope.gameWon){
+			doReset = true;
+		} else {
+			if(confirm("Vill du avsluta spelet?")) {
+				doReset = true;
+			}	
+		}
+
+		if(doReset) {
+			$scope.generateBoard(true);
+			$scope.game.beforeStartedClass = "";
+			$scope.game.startedClass = "hidden";
+		}
 	}
 
 	//init empty board at start

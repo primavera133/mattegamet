@@ -1,21 +1,45 @@
 <h1>fyra i rad</h1>
 
-<form id="params">
-    Tabell 
-    <input type="text" value="2" maxlength="2" ng-model="form.lower"/>
-    till     
-    <input type="text" value="10" maxlength="2" ng-model="form.upper"/>
+<header>
+	<form id="params" ng-class="game.beforeStartedClass">
+		<p>
+		    Vilka tabeller ska vara med?
+	    </p>
+	<p>
+	    <label for="tableOne"><input type="checkbox" value="1" id="tableOne" ng-model="form.tables.1" />1</label>
+	    <label for="tableTwo"><input type="checkbox" value="2" id="tableTwo" ng-model="form.tables.2" />2</label>
+	    <label for="tableThree"><input type="checkbox" value="3" id="tableThree" ng-model="form.tables.3" />3</label>
+	    <label for="tableFour"><input type="checkbox" value="4" id="tableFour" ng-model="form.tables.4" />4</label>
+	    <label for="tableFive"><input type="checkbox" value="5" id="tableFive" ng-model="form.tables.5" />5</label>
+	</p>
+	<p>
+	    <label for="tableSix"><input type="checkbox" value="6" id="tableSix" ng-model="form.tables.6" />6</label>
+	    <label for="tableSeven"><input type="checkbox" value="7" id="tableSeven" ng-model="form.tables.7" />7</label>
+	    <label for="tableEight"><input type="checkbox" value="8" id="tableEight" ng-model="form.tables.8" />8</label>
+	    <label for="tableNine"><input type="checkbox" value="9" id="tableNine" ng-model="form.tables.9" />9</label>
+	    <label for="tableTen"><input type="checkbox" value="10" id="tableTen" ng-model="form.tables.10" />10</label>
+	</p>
+	    <button id="go" ng-click="initGame(1)">1 mot 1</button>
+	    <button id="go" ng-click="initGame(2)">1 mot datorn</button>
+	</form>
+	
+	<div ng-class="game.startedClass">
+		<div class="player" ng-class="whatPlayerClass">Spelare <span ng-bind-html="whatPlayer"></span></div>
+		<div class="question"><span ng-bind-html="question.firstNumber"></span> * <span ng-bind-html="question.secondNumber"></span></div>
+		<div class="winner" ng-class="gameWon">Spelare <span class="player1" ng-class="winner.player1">ett</span><span class="player2" ng-class="winner.player2">två</span> har vunnit!!!</div>
+	</div>
 
-    <input type="button" id="go" value="starta" ng-click="initGame()"/>
-</form>
+</header>
+
 
 <table class="board">
 	<tr ng-repeat="row in board">
-		<td ng-repeat="cell in row" ng-click="clickCell(cell)"><span ng-class="cell.player" ng-bind-html="getAnswerStr(cell)"></span></td>
+		<td ng-repeat="cell in row" ng-click="clickCell(cell)" ng-class="cell.player"><span ng-bind-html="getAnswerStr(cell)"></span></td>
 	</tr>
 </table>
 
-<div class="player">Spelare <span ng-bind-html="whatPlayer"></span></div>
-<div class="question"><span ng-bind-html="question.firstNumber"></span> * <span ng-bind-html="question.secondNumber"></span></div>
-<div class="winner" ng-class="gameWon">Spelare <span class="player1" ng-class="winner.player1">ett</span><span class="player2" ng-class="winner.player2">två</span> har vunnit!!!</div>
+<div ng-class="game.startedClass" class="reset-game">
+	<button ng-click="resetGame()" >Starta nytt spel</button>
+</div>
+
 

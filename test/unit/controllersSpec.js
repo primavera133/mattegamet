@@ -26,7 +26,7 @@ describe('MatteCtrl', function($scope){
     expect(scope.board[0].length).toBe(cells);
   });
 
-  it('a cell should have  question', function() {
+  it('a cell should have a question', function() {
     scope.generateBoard();
     expect(scope.board[0][0].question).toBeDefined();    
   });
@@ -47,6 +47,24 @@ describe('MatteCtrl', function($scope){
     var question = scope.board[0][0].question;
     expect(question.firstNumber * question.secondNumber).toBe(question.answer);
   });
+
+  it('should generate correct tables from checkboxes', function(done) {
+    scope.form.tables = {
+      1:true,
+      2:false,
+      3:false,
+      4:false,
+      5:false,
+      6:false,
+      7:false,
+      8:false,
+      9:false,
+      10:false
+    }
+    scope.generateBoard();
+
+    expect(scope.board[0][0].question.secondNumber).toBe(1);
+  })
 
 
   //$scope.pickRandomCell()
@@ -70,6 +88,23 @@ describe('MatteCtrl', function($scope){
     for(var x=1, l=scope.boardSize; x<l; x++) {
       expect(cells[0].index).not.toBe(cells[x].index);
     }
+  });
+
+  it('should not pick done cells', function() {
+    var cells = [];
+    scope.generateBoard();
+    scope.board.length = 1;
+    var cells = scope.board[0];
+
+    //set all but first to done
+    for(var x=1, l=cells.length; x<l; x++) {
+      cells[x].picked = true;
+    }
+
+    var question = scope.getQuestion();
+
+    expect(question.index).toBe(cells[0].question.index);
+
   });
 
 
@@ -261,11 +296,68 @@ describe('MatteCtrl', function($scope){
 
   });
 
+
+//$scope.setCorrectCell
+it('should set the cell to the player', function(done) {
+  scope.generateBoard();
+  scope.initGame();
+  scope.whatPlayer = "2";
+  var cell = scope.board[0][0];
+
+  expect(cell.player).toBe(null);
+
+  scope.setCorrectCell(cell);
+
+  expect(cell.player).toBe("player2");
+})
+
+
+//$scope.makeMove
+it('should pick an available cell and set it to the player', function(done) {
+  for(var x=0, xl=10; x<xl;x++){
+
+
+  scope.generateBoard();
+  scope.generateWinnerCheckArray();
+
+  //set all but first to done
+  var rowSize = Math.sqrt(scope.boardSize);
+  var cellSize = rowSize;
+  for(var rows = 0; rows < rowSize; rows++) {
+    for (var cells = 0; cells < cellSize; cells++) {
+      if((rows === 0) && (cells === 0)){
+        //skip first cell
+      }else{
+        scope.board[rows][cells].picked = true;
+        scope.board[rows][cells].player = "player1";
+      }
+    }
+  }
+
+  scope.whatPlayer = "2";
+
+  expect(scope.board[0][0].player).toBe(null);
+
+
+  scope.question.firstNumber = scope.board[0][0].question.firstNumber;
+  scope.question.secondNumber = scope.board[0][0].question.secondNumber;
+  
+
+  var cell = scope.makeMove(2);
+
+  expect(scope.board[0][0].question.index).toBe(cell.question.index);
+  expect(scope.board[0][0].player).toBe("player2");
+
+} 
+})
+
+
+
 //make e2e tests instead
   //$scope.clickCell()
   //$scope.displayWinner
   //$scope.initGame()
-
+  //$scope.resetGame
 });
 
 

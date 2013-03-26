@@ -1,19 +1,27 @@
+@font-face {
+  font-family: 'Fresca';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Fresca-Regular'), url(../fonts/freska-regular.woff) format('woff');
+}
+
+
 html {
   font-size: 10px;
   font-family: 'Fresca', sans-serif;
 }
 
+.hidden {
+  display: none;
+}
+
 .wrapper {
-  width: 320px;
-  margin: 10px auto;
+  width: 100%;
+  min-height: 480px;
 
   font-size: 1.6rem;
-
-  border-radius: 10px;
   padding: 10px;
-
   position: relative;
-
 
   background: #fcecfc; /* Old browsers */
   background: -moz-linear-gradient(45deg,  #fcecfc 0%, #fba6e1 50%, #fd89d7 51%, #ff7cd8 100%); /* FF3.6+ */
@@ -24,12 +32,22 @@ html {
   background: linear-gradient(45deg,  #fcecfc 0%,#fba6e1 50%,#fd89d7 51%,#ff7cd8 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', endColorstr='#ff7cd8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
-
-  box-shadow: 2px 4px 4px rgba(0,0,0,.5);
 }
 
+@media only screen 
+and (min-device-width : 321px) {
+  .wrapper {
+    width: 320px;
+    margin: 0 auto;
+
+    border-radius: 10px;
+    box-shadow: 2px 4px 4px rgba(0,0,0,.5);
+  }
+}
+
+
 h1 {
-  font-size: 5.4rem;
+  font-size: 4rem;
   text-align: center;
   text-transform: uppercase;
   margin: 0;
@@ -38,13 +56,28 @@ h1 {
 
 }
 
-form {
+header {
   background: #eee;
-  border-radius: 10px;
-  margin: 10px;
+  border-radius: 15px;
+  margin: 10px 0;
   padding: 10px;
-  box-shadow: 2px 2px 2px rgba(0,0,0, .3);
-  
+  box-shadow: inset 2px 2px 2px rgba(0,0,0, .3);
+  text-align: center;
+}
+
+form p {
+  margin:4px 0;
+}
+
+form p:first-child {
+  font-size: 2rem;
+  line-height: 2.8rem;
+}
+
+label {
+  display: inline-block;
+  margin: 0 0 10px 0;
+  width: 18%;
 }
 
 input[type=text] {
@@ -53,25 +86,31 @@ input[type=text] {
   margin: 5px;
 }
 
-.button-wrap {
-  text-align: right;
+input[type=checkbox] {
+  margin: 4px;
+  vertical-align: bottom;
 }
 
-input[type=button] {
-  padding: 2px;
+button {
+  border: none;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+  background: #000;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 2.8rem;
+  margin: 10px;
+  padding: 2px 30px
 }
 
-.correct {
-  display: none;
+.player.one {
+  color: red;
+}
+.player.two {
+  color: blue;
 }
 
-.incorrect {
-  display: none;
-}
 
-.next {
-  display: none;
-}
 
 table {
   width: 100%;
@@ -89,34 +128,37 @@ td {
   border-radius: 5px;
   vertical-align: middle;
   text-align: center;
-}
-
-td span {
-  display: block;
+  height: 30px;
 }
 
 .player {
-  margin: 10px 0;
-  font-size: 1.6rem;
+  font-size: 2rem;
+  line-height: 2.8rem;
   font-weight: bold;
   text-align: center;
 }
 
 .question {
-  font-size: 2rem;
+  font-size: 5rem;
   font-weight: bold;
   text-align: center;
 }
 
-td .player1 {
-  border: solid 2px red;
-  border-radius: 15px;
+td.player1 {
+  background: url(../img/spritex1.png) 7px 6px;
 }
 
-td .player2 {
-  border: solid 2px blue;
-  border-radius: 15px;
+td.player2 {
+  background: url(../img/spritex1.png) -43px 6px;
 }
+
+td.player1 span,
+td.player2 span {
+  display: none;
+}
+
+
+
 
 .winner {
   position: absolute;
@@ -149,4 +191,18 @@ td .player2 {
   display: inline;
 }
 
+.reset-game {
+  text-align: center;
+  margin: 30px 0 20px;
+}
 
+/* retina icons */
+@media only screen and (-webkit-min-device-pixel-ratio: 2), 
+only screen and (min-resolution: 2dppx) {
+
+  td.player1,
+  td.player2 {
+    background-image: url(../img/spritex2.png);
+    background-size: 100px 50px;
+  }
+}
