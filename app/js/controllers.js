@@ -3,7 +3,7 @@
 /* Controllers */
 
 
-function MatteCtrl($scope) {
+function MatteCtrl($scope, $timeout) {
 
 	$scope.inARow = 4;
 	$scope.board = [];
@@ -276,13 +276,20 @@ function MatteCtrl($scope) {
 			$scope.nextPlayer();
 			$scope.displayQuestion($scope.getQuestion());
 			if($scope.game.type === 2 && $scope.whatPlayer === "2") {
-				$scope.makeMove(2);
+				$scope.makeMovePromise = $timeout(function() {
+	  				$scope.makeMove(2);
+				}, 2000);
 			}
 		}
 	}
 
 	//receive cell click event
 	$scope.clickCell = function(cell) {
+		if($scope.game.type === 2 && $scope.whatPlayer === "2") {
+			console.log("click cell return");
+			return;
+		}
+
 		var isCorrect = $scope.checkAnswer(cell);
 
 		if (isCorrect) {
@@ -292,6 +299,12 @@ function MatteCtrl($scope) {
 
 	//make computer generated move
 	$scope.makeMove = function(player) {
+		/*
+		if(parseInt($scope.whatPlayer, 10) !== player) {
+			return;
+		}
+		*/
+
 		var correctAnswer = false;
 		var cell;
 
@@ -406,4 +419,4 @@ function MatteCtrl($scope) {
 
 }
 
-MatteCtrl.$inject = ['$scope'];
+MatteCtrl.$inject = ['$scope','$timeout'];

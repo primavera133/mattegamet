@@ -19,8 +19,8 @@
 	    <label for="tableNine"><input type="checkbox" value="9" id="tableNine" ng-model="form.tables.9" />9</label>
 	    <label for="tableTen"><input type="checkbox" value="10" id="tableTen" ng-model="form.tables.10" />10</label>
 	</p>
-	    <button id="go" ng-click="initGame(1)">1 mot 1</button>
-	    <button id="go" ng-click="initGame(2)">1 mot datorn</button>
+	    <button id="go" ng-click="initGame(1)"><span class="icon person"></span> - <span class="icon person"></span></button>
+	    <button id="go" ng-click="initGame(2)"><span class="icon person"></span> - <span class="icon robot"></span></button>
 	</form>
 	
 	<div ng-class="game.startedClass">
